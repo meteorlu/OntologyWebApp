@@ -1,7 +1,6 @@
 {"total":20,"rows":[
-  {"Number":1,"Subject":"http://www.baidu.com","Predicate":"http://www.baidu.com","Object":"http://www.baidu.com"},
-  {"Number":2,"Subject":"http://www.baidu.com","Predicate":"http://www.baidu.com","Object":"http://www.baidu.com"},
-  {"Number":3,"Subject":"http://www.baidu.com","Predicate":"http://www.baidu.com","Object":"http://www.baidu.com"},
-  {"Number":4,"Subject":"http://www.baidu.com","Predicate":"http://www.baidu.com","Object":"http://www.baidu.com"},
-  {"Number":5,"Subject":"http://www.baidu.com","Predicate":"http://www.baidu.com","Object":"http://www.baidu.com"}
+  {"Number":1,"Subject":"advisor","Predicate":"range","Object":"Professor"},
+  {"Number":2,"Subject":"Faculty","Predicate":"subClassOf","Object":"Employee"},
+  {"Number":3,"Subject":"Professor","Predicate":"subClassOf","Object":"Faculty"},
+  {"Number":4,"Subject":"Department1.University0.edu/GraduateStudent4","Predicate":"advisor","Object":"Department1.University0.edu/AssistantProfessor0"}
 ]}

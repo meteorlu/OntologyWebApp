@@ -26,6 +26,7 @@
   <script type="text/javascript">
     function showContent(obj) {
       $("#"+$(obj).text()).css("display","block").siblings().css("display","none");
+      $("#center").panel({"title":$(obj).text()});
     }
   </script>
   <script type="text/javascript">
@@ -57,13 +58,19 @@
         $('#dg').datagrid('endEdit', editIndex);
         editIndex = undefined;
         return true;
-      } else {
+      } else if ($('#dg_score').datagrid('validateRow', editIndex)){
+        $('#dg').datagrid('endEdit', editIndex);
+        editIndex = undefined;
+        return true;
+      }  else {
         return false;
       }
     }
     function onClickCell(index, field){
       if (endEditing()){
         $('#dg').datagrid('selectRow', index)
+                .datagrid('editCell', {index:index,field:field});
+        $('#dg_score').datagrid('selectRow', index)
                 .datagrid('editCell', {index:index,field:field});
         editIndex = index;
       }
@@ -94,7 +101,9 @@
       <div title="Ontology" data-options="selected:true" style="padding:10px;">
         <a class="easyui-linkbutton" style="margin-top:10px;" onclick="showContent(this)">Importing</a><br>
         <a class="easyui-linkbutton" style="margin-top:10px;" onclick="showContent(this)">Reasoning</a><br>
-        <a class="easyui-linkbutton" style="margin-top:10px;" onclick="showContent(this)">Debugging</a>
+        <a class="easyui-linkbutton" style="margin-top:10px;" onclick="showContent(this)">Debugging</a><br>
+        <a class="easyui-linkbutton" style="margin-top:10px;" onclick="showContent(this)">Scoring</a><br>
+        <a class="easyui-linkbutton" style="margin-top:10px;" onclick="showContent(this)">Training</a>
       </div>
       <div title="About" style="padding:10px;">
         <a class="easyui-linkbutton" style="margin-top:10px;">Contact</a><br>
@@ -102,7 +111,7 @@
       </div>
     </div>
   </div>
-  <div data-options="region:'center',iconCls:'icon-ok'" title="Center" style="padding:5px">
+  <div id="center" data-options="region:'center',iconCls:'icon-ok'" title="Center" style="padding:5px">
     <div id="Importing" class="easyui-layout" data-options="fit:true">
       Importing<br><input class="easyui-filebox" style="width: 200px"><br>
       upload pregress:      <div class="easyui-progressbar" data-options="value:80" style="width:50%;"></div>
@@ -110,44 +119,127 @@
     <div id="Reasoning" class="easyui-layout" data-options="fit:true">
       Reasoning
     </div>
+    <div id="Scoring" class="easyui-layout" data-options="fit:true">
+      Numbers:
+      <select class="easyui-combobox" style="width: 100px">
+        <option>100</option>
+        <option>300</option>
+        <option>500</option>
+      </select>
+      <table id="dg_score" class="easyui-datagrid" title="Justifications" style="width:auto;padding-top: 10px"
+             data-options="pagination:true,
+                   singleSelect:true,
+                   collapsible:true,
+                   url:'datas/justifications.json',
+                   method:'get',
+                   onClickCell: onClickCell
+        ">
+        <thead>
+        <tr>
+          <th data-options="field:'Number',width:80">Index</th>
+          <th data-options="field:'tripleNumber',width:80">tripleNumber</th>
+          <th data-options="field:'Score',width:50,editor:{
+							type:'numberbox',
+							options:{
+								precision:0,
+								min:0,
+								max:100
+							}
+						}">Score</th>
+        </tr>
+        </thead>
+      </table>
+      <table id="dg_score_triples" class="easyui-datagrid" title="Justification Detail" style="width:auto;padding-top: 10px"
+             data-options="pagination:true,
+                   singleSelect:true,
+                   collapsible:true,
+                   url:'datas/triples.json',
+                   method:'get',
+                   onClickCell: onClickCell
+        ">
+        <thead>
+        <tr>
+          <th data-options="field:'Number',width:80">Number</th>
+          <th data-options="field:'Subject'">Subject</th>
+          <th data-options="field:'Predicate'">Predicate</th>
+          <th data-options="field:'Object'">Object</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
+    <div id="Training" class="easyui-layout" data-options="fit:true">
+      Numbers:
+      <select class="easyui-combobox" style="width: 100px">
+        <option>100</option>
+        <option>300</option>
+        <option>500</option>
+      </select>
+      <a onclick="$('#dlg').dialog('open')" class="easyui-linkbutton" iconCls="icon-add" style="margin: 5px;">Training</a>
+      <table id="dg_train" class="easyui-datagrid" title="Justifications" style="width:auto;padding-top: 10px"
+             data-options="pagination:true,
+                   singleSelect:true,
+                   collapsible:true,
+                   url:'datas/justifications_training.json',
+                   method:'get',
+                   onClickCell: onClickCell
+        ">
+        <thead>
+        <tr>
+          <th data-options="field:'Number',width:80">Index</th>
+          <th data-options="field:'tripleNumber',width:80">tripleNumber</th>
+          <th data-options="field:'Score',width:50,editor:{
+							type:'numberbox',
+							options:{
+								precision:0,
+								min:0,
+								max:100
+							}
+						}">Score</th>
+        </tr>
+        </thead>
+      </table>
+      <table id="dg_train_triples" class="easyui-datagrid" title="Justification Detail" style="width:auto;padding-top: 10px"
+             data-options="pagination:true,
+                   singleSelect:true,
+                   collapsible:true,
+                   url:'datas/triples.json',
+                   method:'get',
+                   onClickCell: onClickCell
+        ">
+        <thead>
+        <tr>
+          <th data-options="field:'Number',width:80">Number</th>
+          <th data-options="field:'Subject'">Subject</th>
+          <th data-options="field:'Predicate'">Predicate</th>
+          <th data-options="field:'Object'">Object</th>
+        </tr>
+        </thead>
+      </table>
+    </div>
     <div id="Debugging" class="easyui-layout" data-options="fit:true">
       <div data-options="region:'north',split:true" style="height:50px;padding-top:5px;">
-        subject:<input class="easyui-textbox" style="width: 120px;" value="http://www.jeasyui.com/documentation/index.php#">
-        predicate:<input class="easyui-textbox" style="width: 120px;" value="http://www.jeasyui.com/documentation/index.php#">
-        object:<input class="easyui-textbox" style="width: 120px;" value="http://www.jeasyui.com/documentation/index.php#">
+        subject:<input class="easyui-textbox" style="width: 300px;" value="Department1.University0.edu/AssistantProfessor0">
+        predicate:<input class="easyui-textbox" style="width: 120px;" value="type">
+        object:<input class="easyui-textbox" style="width: 120px;" value="Employee">
         <a class="easyui-linkbutton">Debug</a>
       </div>
       <!--<div data-options="region:'west',split:true" style="width:150px">-->
       <!---->
       <!--</div>-->
       <div data-options="region:'center'" style="padding-top: 5px;">
-        <a onclick="$('#dlg').dialog('open')" class="easyui-linkbutton" iconCls="icon-add" style="margin: 5px;">Training</a>
-        <a href="#" class="easyui-linkbutton" iconCls="icon-filter" style="margin: 5px;">Sorting</a>
-        Numbers:
-        <select class="easyui-combobox">
-          <option>Top 10</option>
-          <option>Top 5</option>
-          <option>Top 3</option>
-        </select>
-
-        <%--<table class="easyui-datagrid" title="Basic DataGrid" style="width:auto;padding-top: 10px"--%>
-               <%--data-options="pagination:true,singleSelect:true,collapsible:true,url:'datagrid_data1.json',method:'get'">--%>
-          <%--<thead>--%>
-          <%--<tr>--%>
-            <%--<th data-options="field:'itemid',width:80">Item ID</th>--%>
-            <%--<th data-options="field:'productid',width:100">Product</th>--%>
-            <%--<th data-options="field:'listprice',width:80,align:'right'">List Price</th>--%>
-            <%--<th data-options="field:'unitcost',width:80,align:'right'">Unit Cost</th>--%>
-            <%--<th data-options="field:'attr1'">Attribute</th>--%>
-            <%--<th data-options="field:'status',align:'center'">Status</th>--%>
-          <%--</tr>--%>
-          <%--</thead>--%>
-        <%--</table>--%>
+        <%--<a onclick="$('#dlg').dialog('open')" class="easyui-linkbutton" iconCls="icon-add" style="margin: 5px;">Training</a>--%>
+        <%--<a href="#" class="easyui-linkbutton" iconCls="icon-filter" style="margin: 5px;">Sorting</a>--%>
+        <%--Numbers:--%>
+        <%--<select class="easyui-combobox">--%>
+          <%--<option>Top 10</option>--%>
+          <%--<option>Top 5</option>--%>
+          <%--<option>Top 3</option>--%>
+        <%--</select>--%>
         <table id="dg" class="easyui-datagrid" title="Justifications" style="width:auto;padding-top: 10px"
                data-options="pagination:true,
                    singleSelect:true,
                    collapsible:true,
-                   url:'datas/justifications.json',
+                   url:'datas/justifications_debugging.json',
                    method:'get',
                    onClickCell: onClickCell
         ">
@@ -185,6 +277,9 @@
         </table>
       </div>
     </div>
+    <div id="Sorting" class="easyui-layout" data-options="fit:true">
+      Reasoning
+    </div>
   </div>
 </div>
   <div id="dlg" class="easyui-dialog" title="Set Learning Rate" style="width:400px;padding:10px"
@@ -209,7 +304,7 @@
                   }]
               ">
       <div style="text-align: center">
-        Learning Rate:<input class="easyui-numberbox" style="width:20px ">%
+        Learning Rate:<input class="easyui-numberbox" style="width:30px ">%
       </div>
   </div>
 </body>
